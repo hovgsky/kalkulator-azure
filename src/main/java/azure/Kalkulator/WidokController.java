@@ -15,7 +15,7 @@ public class WidokController {
     private final List<String> historia = new ArrayList<>();
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
         model.addAttribute("dzialanie", "");
         model.addAttribute("historia", historia);
         return "index"; // templates/index.html
