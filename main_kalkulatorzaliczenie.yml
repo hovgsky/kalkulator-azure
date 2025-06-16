@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '*.jar'
+          path: 'target/*.jar'
 
   deploy:
     runs-on: windows-latest
@@ -60,5 +60,5 @@ jobs:
         with:
           app-name: 'Kalkulatorzaliczenie'
           slot-name: 'Production'
-          package: '*.jar'
+          package: 'target/*.jar'
           
