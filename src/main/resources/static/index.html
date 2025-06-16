@@ -1,19 +1,119 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <title>Kalkulator</title>
-  <script defer src="script.js"></script>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    #result, #history { margin-top: 20px; }
-  </style>
+    <meta charset="UTF-8" />
+    <title>Kalkulator z historią</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        display: flex;
+        gap: 20px;
+      }
+      .calculator {
+        flex: 1;
+        max-width: 400px;
+      }
+      #inputField {
+        width: 100%;
+        font-size: 1.5em;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .buttons button {
+        font-size: 1.2em;
+        padding: 15px;
+        cursor: pointer;
+      }
+      .history {
+        flex: 0.5;
+        max-width: 250px;
+        border-left: 2px solid #ccc;
+        padding-left: 15px;
+      }
+      .history h3 {
+        margin-top: 0;
+      }
+      .history-list {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .history-item {
+        margin-bottom: 8px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+      }
+    </style>
 </head>
 <body>
-  <h2>Kalkulator</h2>
-  <input type="text" id="expression" placeholder="np. 2+2*5" />
-  <button onclick="calculate()">Oblicz</button>
-  <div id="result"></div>
-  <div id="history"><h4>Historia:</h4><ul id="historyList"></ul></div>
+<div class="calculator">
+    <input id="inputField" type="text" placeholder="Wpisz działanie" autofocus />
+    
+    <div class="buttons">
+      <button onclick="appendToInput('7')">7</button>
+      <button onclick="appendToInput('8')">8</button>
+      <button onclick="appendToInput('9')">9</button>
+      <button onclick="appendToInput('+')">+</button>
+
+      <button onclick="appendToInput('4')">4</button>
+      <button onclick="appendToInput('5')">5</button>
+      <button onclick="appendToInput('6')">6</button>
+      <button onclick="appendToInput('-')">-</button>
+
+      <button onclick="appendToInput('1')">1</button>
+      <button onclick="appendToInput('2')">2</button>
+      <button onclick="appendToInput('3')">3</button>
+      <button onclick="appendToInput('*')">*</button>
+
+      <button onclick="appendToInput('0')">0</button>
+      <button onclick="appendToInput('.')">.</button>
+      <button onclick="calculateResult()">=</button>
+      <button onclick="appendToInput('/')">/</button>
+    </div>
+</div>
+
+<div class="history">
+    <h3>Historia działań</h3>
+    <div id="historyList" class="history-list"></div>
+</div>
+
+<script>
+  const inputField = document.getElementById('inputField');
+  const historyList = document.getElementById('historyList');
+
+  function appendToInput(value) {
+    inputField.value += value;
+    inputField.focus();
+  }
+
+  function calculateResult() {
+    try {
+      const expression = inputField.value;
+      const result = eval(expression);
+      addToHistory(expression + ' = ' + result);
+      inputField.value = result;
+    } catch (e) {
+      alert('Nieprawidłowe działanie!');
+    }
+  }
+
+  function addToHistory(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    div.className = 'history-item';
+    historyList.prepend(div);
+  }
+
+  inputField.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      calculateResult();
+    }
+  });
+</script>
 </body>
 </html>
