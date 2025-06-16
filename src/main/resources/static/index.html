@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kalkulator</title>
+  <script defer src="script.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #result, #history { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Kalkulator</h2>
+  <input type="text" id="expression" placeholder="np. 2+2*5" />
+  <button onclick="calculate()">Oblicz</button>
+  <div id="result"></div>
+  <div id="history"><h4>Historia:</h4><ul id="historyList"></ul></div>
+</body>
+</html>
