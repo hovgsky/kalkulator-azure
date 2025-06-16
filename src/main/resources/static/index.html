@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8" />
-    <title>Kalkulator z historią</title>
+    <title>Kalkulator z Thymeleaf</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -20,14 +20,11 @@
         padding: 10px;
         margin-bottom: 10px;
       }
-      .buttons {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-      }
       .buttons button {
         font-size: 1.2em;
-        padding: 15px;
+        width: 60px;
+        height: 50px;
+        margin: 4px 4px 4px 0;
         cursor: pointer;
       }
       .history {
@@ -48,72 +45,69 @@
         border-bottom: 1px solid #eee;
         padding-bottom: 5px;
       }
+      .error {
+        color: red;
+        margin-top: 10px;
+      }
+      .result {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
     </style>
 </head>
 <body>
 <div class="calculator">
-    <input id="inputField" type="text" placeholder="Wpisz działanie" autofocus />
-    
-    <div class="buttons">
-      <button onclick="appendToInput('7')">7</button>
-      <button onclick="appendToInput('8')">8</button>
-      <button onclick="appendToInput('9')">9</button>
-      <button onclick="appendToInput('+')">+</button>
+  <form action="#" th:action="@{/oblicz}" method="post" id="calcForm">
+    <input id="inputField" name="dzialanie" type="text" placeholder="Wpisz działanie" autofocus
+           th:value="${dzialanie}" autocomplete="off" />
+    <button type="submit">=</button>
+  </form>
 
-      <button onclick="appendToInput('4')">4</button>
-      <button onclick="appendToInput('5')">5</button>
-      <button onclick="appendToInput('6')">6</button>
-      <button onclick="appendToInput('-')">-</button>
+  <div class="buttons">
+    <button type="button" onclick="appendToInput('7')">7</button>
+    <button type="button" onclick="appendToInput('8')">8</button>
+    <button type="button" onclick="appendToInput('9')">9</button>
+    <button type="button" onclick="appendToInput('+')">+</button><br/>
 
-      <button onclick="appendToInput('1')">1</button>
-      <button onclick="appendToInput('2')">2</button>
-      <button onclick="appendToInput('3')">3</button>
-      <button onclick="appendToInput('*')">*</button>
+    <button type="button" onclick="appendToInput('4')">4</button>
+    <button type="button" onclick="appendToInput('5')">5</button>
+    <button type="button" onclick="appendToInput('6')">6</button>
+    <button type="button" onclick="appendToInput('-')">-</button><br/>
 
-      <button onclick="appendToInput('0')">0</button>
-      <button onclick="appendToInput('.')">.</button>
-      <button onclick="calculateResult()">=</button>
-      <button onclick="appendToInput('/')">/</button>
-    </div>
+    <button type="button" onclick="appendToInput('1')">1</button>
+    <button type="button" onclick="appendToInput('2')">2</button>
+    <button type="button" onclick="appendToInput('3')">3</button>
+    <button type="button" onclick="appendToInput('*')">*</button><br/>
+
+    <button type="button" onclick="appendToInput('0')">0</button>
+    <button type="button" onclick="appendToInput('.')">.</button>
+    <button type="button" onclick="clearInput()">C</button>
+    <button type="button" onclick="appendToInput('/')">/</button>
+  </div>
+
+  <div th:if="${wynik != null}" class="result">Wynik: <span th:text="${wynik}"></span></div>
+  <div th:if="${blad != null}" class="error" th:text="${blad}"></div>
 </div>
 
 <div class="history">
-    <h3>Historia działań</h3>
-    <div id="historyList" class="history-list"></div>
+  <h3>Historia działań</h3>
+  <div class="history-list">
+    <div th:each="item : ${historia}" class="history-item" th:text="${item}"></div>
+  </div>
 </div>
 
 <script>
-  const inputField = document.getElementById('inputField');
-  const historyList = document.getElementById('historyList');
-
-  function appendToInput(value) {
-    inputField.value += value;
-    inputField.focus();
+  function appendToInput(char) {
+    const input = document.getElementById('inputField');
+    input.value += char;
+    input.focus();
   }
 
-  function calculateResult() {
-    try {
-      const expression = inputField.value;
-      const result = eval(expression);
-      addToHistory(expression + ' = ' + result);
-      inputField.value = result;
-    } catch (e) {
-      alert('Nieprawidłowe działanie!');
-    }
+  function clearInput() {
+    const input = document.getElementById('inputField');
+    input.value = '';
+    input.focus();
   }
-
-  function addToHistory(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    div.className = 'history-item';
-    historyList.prepend(div);
-  }
-
-  inputField.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      calculateResult();
-    }
-  });
 </script>
 </body>
 </html>
